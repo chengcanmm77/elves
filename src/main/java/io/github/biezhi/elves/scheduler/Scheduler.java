@@ -19,6 +19,7 @@ public class Scheduler {
 
     private BlockingQueue<Request>  pending = new LinkedBlockingQueue<>();
     private BlockingQueue<Response> result  = new LinkedBlockingQueue<>();
+    private BlockingQueue<Request>  failRequest = new LinkedBlockingQueue<>();
 
     public void addRequest(Request request) {
         try {
@@ -61,6 +62,24 @@ public class Scheduler {
             return null;
         }
     }
+
+    public void addFailRequest(Request request) {
+        try {
+            this.failRequest.put(request);
+        } catch (InterruptedException e) {
+            log.error("向调度器添加 Request 出错", e);
+        }
+    }
+
+    public Request nextFailRequest() {
+        try {
+            return failRequest.take();
+        } catch (InterruptedException e) {
+            log.error("从调度器获取 Request 出错", e);
+            return null;
+        }
+    }
+
 
     public void addRequests(List<Request> requests) {
         requests.forEach(this::addRequest);

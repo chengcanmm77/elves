@@ -3,8 +3,6 @@ package io.github.biezhi.elves.request;
 import io.github.biezhi.elves.spider.Spider;
 import lombok.Getter;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +23,9 @@ public class Request<T> {
     private String contentType = "text/html; charset=UTF-8";
     private String charset = "UTF-8";
     private Parser<T> parser;
+    private Map<Object,Object> context = new HashMap<>();
+    private int failTimes = 0;
+    private Long lastReqTime;
 
     public Request(Spider spider, String url, Parser<T> parser) {
         this.spider = spider;
@@ -78,7 +79,35 @@ public class Request<T> {
         return this;
     }
 
+    public int increaseFailTime(){
+        return this.failTimes++;
+    }
+
     public String method() {
         return this.method;
+    }
+
+    public int getFailTimes() {
+        return failTimes;
+    }
+
+    public void setFailTimes(int failTimes) {
+        this.failTimes = failTimes;
+    }
+
+    public Map<Object, Object> getContext() {
+        return context;
+    }
+
+    public void setContext(Map<Object, Object> context) {
+        this.context = context;
+    }
+
+    public Long getLastReqTime() {
+        return lastReqTime;
+    }
+
+    public void setLastReqTime(Long lastReqTime) {
+        this.lastReqTime = lastReqTime;
     }
 }

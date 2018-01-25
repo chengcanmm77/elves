@@ -31,6 +31,11 @@ public class Config implements Cloneable {
      */
     private String userAgent = UserAgent.CHROME_FOR_MAC;
 
+    /**
+     * 失败重试次数
+     */
+    private int retryTimes = 3;
+
     private int queueSize;
 
     public static Config me() {
@@ -80,6 +85,14 @@ public class Config implements Cloneable {
     public Config queueSize(int queueSize) {
         this.queueSize = queueSize;
         return this;
+    }
+
+    public int getRetryTimes() {
+        return retryTimes;
+    }
+
+    public void setRetryTimes(int retryTimes) {
+        this.retryTimes = retryTimes;
     }
 
     @Override

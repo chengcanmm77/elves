@@ -34,11 +34,22 @@ public class Downloader implements Runnable {
         if ("post".equalsIgnoreCase(request.method())) {
             httpReq = io.github.biezhi.request.Request.post(request.getUrl());
         }
-
-        InputStream result = httpReq.contentType(request.contentType()).headers(request.getHeaders())
-                .connectTimeout(request.getSpider().getConfig().timeout())
-                .readTimeout(request.getSpider().getConfig().timeout())
-                .stream();
+        InputStream result = null;
+        try {
+            result = httpReq.contentType(request.contentType()).headers(request.getHeaders())
+                    .connectTimeout(request.getSpider().getConfig().timeout())
+                    .readTimeout(request.getSpider().getConfig().timeout())
+                    .stream();
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            if(request.getFailTimes()>request.getSpider().getConfig().getRetryTimes()){
+                return;
+            }
+            request.increaseFailTime();
+            request.setLastReqTime(System.currentTimeMillis());
+            scheduler.addFailRequest(request);
+            return;
+        }
 
         log.debug("[{}] 下载完毕", request.getUrl());
         Response response = new Response(request, result);

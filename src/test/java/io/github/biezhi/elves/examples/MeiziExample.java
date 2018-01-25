@@ -29,7 +29,7 @@ public class MeiziExample {
     @Slf4j
     static class MeiziSpider extends Spider {
 
-        private String storageDir = "/Users/biezhi/Desktop/meizi";
+        private String storageDir = "d:/meizi";
 
         public MeiziSpider(String name) {
             super(name);
@@ -49,12 +49,13 @@ public class MeiziExample {
                     io.github.biezhi.request.Request.get(imgUrl)
                             .header("Referer", request.getUrl())
                             .header("User-Agent", UserAgent.CHROME_FOR_MAC)
-                            .connectTimeout(20_000)
-                            .readTimeout(20_000)
+                            .connectTimeout(200_000)
+                            .readTimeout(200_000)
                             .receive(new File(storageDir, System.currentTimeMillis() + ".jpg"));
                 });
 
                 log.info("[{}] 图片下载 OJ8K.", request.getUrl());
+                System.out.println("[{}] 图片下载 OJ8K"+request.getUrl());
             });
 
             this.requests.forEach(this::resetRequest);
