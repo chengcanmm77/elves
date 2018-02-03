@@ -26,12 +26,21 @@ public class Request<T> {
     private Map<Object,Object> context = new HashMap<>();
     private int failTimes = 0;
     private Long lastReqTime;
+    private String parentId;
 
     public Request(Spider spider, String url, Parser<T> parser) {
         this.spider = spider;
         this.url = url;
         this.parser = parser;
         this.header("User-Agent", spider.getConfig().userAgent());
+    }
+
+    public Request(Spider spider, String url, Parser<T> parser,String parentId) {
+        this.spider = spider;
+        this.url = url;
+        this.parser = parser;
+        this.header("User-Agent", spider.getConfig().userAgent());
+        this.parentId = parentId;
     }
 
     public Request header(String key, String value) {
